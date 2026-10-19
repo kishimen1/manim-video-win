@@ -53,9 +53,9 @@ Codex が最初に**声**と**話し方**を聞いてきます。番号で答え
 
 詳しい場所や削除方法は [skill/manim-video-win/references/setup.md](skill/manim-video-win/references/setup.md)、困ったときは [troubleshooting.md](skill/manim-video-win/references/troubleshooting.md) を見てください。
 
-## 社内で配布する前に（情報システム担当の方へ）
+## セットアップが行う通信と操作
 
-セットアップは次の通信と操作を行います。社内ポリシーで制限がある場合は事前に許可が必要です。
+参考として、セットアップが接続する先と、PC に対して行う操作をまとめます。
 
 - 接続先: `github.com` / `objects.githubusercontent.com`（ffmpeg・TinyTeX・AivisSpeech）、`astral.sh`（uv）、`pypi.org` / `files.pythonhosted.org`（Manim）、`python-build-standalone` の GitHub Releases（Python）、`tlnet.yihui.org` ほか CTAN ミラー（LaTeX パッケージ）、`api.aivis-project.com`（声のモデル）
 - PowerShell スクリプトを `-ExecutionPolicy Bypass` で実行します。
