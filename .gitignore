@@ -1,0 +1,8 @@
+.DS_Store
+__pycache__/
+build/
+media/
+final.mp4
+final.srt
+narration.md
+tools.json

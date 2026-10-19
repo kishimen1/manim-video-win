@@ -1,0 +1,60 @@
+name: windows-setup
+
+# setup.ps1 がまっさらな Windows でツールを入れ、サンプル動画を書き出せるかを確かめる
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  setup-and-render:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup.ps1
+        shell: pwsh
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File skill\manim-video-win\scripts\setup.ps1
+
+      - name: tools.json
+        shell: pwsh
+        run: Get-Content "$env:USERPROFILE\.agents\skills\manim-video-win\tools.json"
+
+      - name: render (Windows 標準音声)
+        shell: pwsh
+        run: |
+          $build = "$env:USERPROFILE\.agents\skills\manim-video-win\scripts\build.cmd"
+          New-Item -ItemType Directory -Force out\sapi | Out-Null
+          Copy-Item examples\hello\scene.py out\sapi\
+          Copy-Item "$env:USERPROFILE\.agents\skills\manim-video-win\assets\tbb_style.py" out\sapi\
+          Set-Location out\sapi
+          & $build preview scene.py --engine sapi
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          & $build render scene.py --engine sapi
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+
+      - name: render (AivisSpeech)
+        shell: pwsh
+        run: |
+          $build = "$env:USERPROFILE\.agents\skills\manim-video-win\scripts\build.cmd"
+          New-Item -ItemType Directory -Force out\aivis | Out-Null
+          Copy-Item examples\hello\scene.py out\aivis\
+          Copy-Item "$env:USERPROFILE\.agents\skills\manim-video-win\assets\tbb_style.py" out\aivis\
+          Set-Location out\aivis
+          & $build narration scene.py
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          & $build render scene.py
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: outputs
+          path: |
+            out/**/final.mp4
+            out/**/final.srt
+            out/**/narration.md
+            out/**/build/preview/*.png
+            out/**/build/logs/*.log
