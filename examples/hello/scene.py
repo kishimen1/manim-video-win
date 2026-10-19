@@ -1,4 +1,4 @@
-"""動作確認用の最小の動画（約 20 秒）。
+r"""動作確認用の最小の動画（約 20 秒）。
 
 使い方: このフォルダに tbb_style.py をコピーしてから
   & "$env:USERPROFILE\.agents\skills\manim-video-win\scripts\build.cmd" render scene.py
